@@ -1,4 +1,54 @@
-/* Responsive */* {
+/* Employee Cells */
+.employee-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background: white;
+}
+
+.employee-cell:hover {
+    background-color: #f0f7ff;
+}
+
+/* Day Cells */
+.day-cell {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 3px;
+    min-height: 60px;
+    background: white;
+    padding: 6px;
+}
+
+.day-cell.current-day {
+    background: #f3f8ff;
+    border-left: 3px solid #1976d2;
+}
+
+/* Hover effect for employee rows */
+.schedule-grid .grid-cell.employee-row-hover {
+    background-color: #f0f7ff !important;
+}
+
+.schedule-grid .grid-cell.employee-row-hover.current-day {
+    background-color: #e1f5fe !important;
+}
+
+.employee-initials {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 11px;
+    flex-shrink/* Responsive */* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -8,56 +58,43 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: #f5f5f5;
     color: #333;
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .container {
     max-width: 960px;
     margin: 0 auto;
     min-height: 100vh;
-    padding: 0 10px;
+    padding: 20px 10px;
 }
 
-/* Schedule Content Container */
-.schedule-content {
-    transition: all 0.3s ease;
-    padding: 20px 0;
-}
-
-.schedule-content.collapsed .schedule-body,
-.schedule-content.collapsed .filter-results {
-    display: none;
-}
-
-/* Header */
-.header {
+/* Unified Container */
+.unified-container {
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.unified-container.collapsed {
+    border-radius: 20px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Section */
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 20px;
 }
 
-.header-title-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0;
-}
-
-.header-title-section h1 {
-    font-size: 20px;
+.header-section h1 {
+    font-size: 18px;
     font-weight: 600;
     color: #333;
     margin: 0;
-}
-
-.header-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #e0e0e0;
 }
 
 .collapse-btn {
@@ -80,8 +117,32 @@ body {
     transition: transform 0.3s ease;
 }
 
-.collapse-btn.expanded i {
-    transform: rotate(90deg);
+/* Expandable Content */
+.expandable-content {
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    max-height: 5000px;
+    opacity: 1;
+    overflow: hidden;
+}
+
+.expandable-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+}
+
+/* Section Separators */
+.section-separator {
+    height: 1px;
+    background: #e0e0e0;
+    margin: 0;
+}
+
+/* Date Section */
+.date-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
 }
 
 .date-navigation {
@@ -115,7 +176,7 @@ body {
 }
 
 .date-range {
-    font-size: 15px;
+    font-size: 12px;
     font-weight: 500;
     text-align: center;
 }
@@ -198,9 +259,30 @@ body {
 .schedule-grid {
     display: grid;
     grid-template-columns: 140px repeat(5, 1fr);
-    /* Rows will be dynamically set: auto for header + auto for each employee */
     gap: 0;
     font-size: 12px;
+}
+
+/* Loading and Error States */
+.loading, .error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.loading-text, .error-text {
+    font-size: 12px;
+    color: #666;
+}
+
+.error-text {
+    color: #d32f2f;
+}
+
+/* Schedule Body */
+.schedule-body {
+    padding: 0 20px;
 }
 
 /* Grid Cells - Headers and Data */
@@ -224,7 +306,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
+    font-size: 12px;
     flex-direction: column;
 }
 
@@ -371,7 +453,16 @@ body {
 .work-block-time {
     font-weight: 500;
     white-space: nowrap;
-    font-size: 9px;
+    font-size: 10px;
+}
+
+/* Filter Results */
+.filter-results {
+    padding: 10px 20px;
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    background: #f8f9fa;
 }
 
 /* Modal */
@@ -497,6 +588,133 @@ body {
     margin-top: 20px;
 }
 
+/* Filter Modal Styles */
+.search-container {
+    margin-bottom: 20px;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.employee-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 20px;
+}
+
+.employee-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.employee-checkbox-item:hover {
+    background: #f8f9fa;
+}
+
+.employee-checkbox-item input[type="checkbox"] {
+    margin: 0;
+}
+
+.employee-checkbox-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.employee-checkbox-initials {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 10px;
+    flex-shrink: 0;
+}
+
+.filter-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.office-hours-filter-btn {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+    background: white;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.office-hours-filter-btn:hover {
+    background: #f0f0f0;
+}
+
+.office-hours-filter-btn.active {
+    background: #e8f5e8;
+    border-color: #4caf50;
+    color: #2e7d32;
+}
+
+.office-hours-filter-btn.active:hover {
+    background: #f1f8e9;
+}
+
+.filter-action-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.filter-action-buttons button {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.select-all-btn, .deselect-all-btn {
+    background: white;
+}
+
+.select-all-btn:hover, .deselect-all-btn:hover {
+    background: #f0f0f0;
+}
+
+.apply-filter-btn {
+    background: #1976d2;
+    color: white;
+    border-color: #1976d2;
+}
+
+.apply-filter-btn:hover {
+    background: #1565c0;
+}
+
 /* Employee Colors */
 .color-1 { background-color: #e53e3e; }
 .color-2 { background-color: #dd6b20; }
@@ -510,6 +728,134 @@ body {
 .color-10 { background-color: #2b6cb0; }
 .color-11 { background-color: #2d3748; }
 .color-12 { background-color: #744210; }
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 8px;
+    width: 95%;
+    max-width: 1000px;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.filter-modal-content {
+    width: 95%;
+    max-width: 500px;
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+.close-btn:hover {
+    background: #f0f0f0;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.week-section {
+    margin-bottom: 30px;
+}
+
+.week-section h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.modal-schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    min-width: 0;
+}
+
+.modal-day {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 12px;
+    min-height: 120px;
+    min-width: 0;
+    overflow-wrap: break-word;
+}
+
+.modal-day-header {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+    text-align: center;
+    color: #666;
+}
+
+.modal-day-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.modal-work-block {
+    background: #d1c4e9;
+    color: #4a148c;
+    border-radius: 12px;
+    padding: 6px 8px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.modal-work-block.office {
+    background: #ffeaa7;
+    color: #2d3436;
+}
+
+.no-work {
+    color: #999;
+    font-size: 12px;
+    font-style: italic;
+    text-align: center;
+    margin-top: 20px;
+}
 
 /* Filter Results */
 .filter-results {

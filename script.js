@@ -15,7 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeEventListeners();
     loadScheduleData();
     // Start collapsed by default
-    document.getElementById('scheduleContent').classList.add('collapsed');
+    document.getElementById('unifiedContainer').classList.add('collapsed');
+    document.getElementById('expandableContent').classList.add('collapsed');
 });
 
 function initializeEventListeners() {
@@ -32,13 +33,13 @@ function initializeEventListeners() {
     // Collapse/Expand button
     document.getElementById('collapseBtn').addEventListener('click', toggleScheduleCollapse);
     
-    // Modal events
+    // Modal events - Employee modal
     document.getElementById('closeModal').addEventListener('click', closeModal);
     document.getElementById('employeeModal').addEventListener('click', (e) => {
         if (e.target.id === 'employeeModal') closeModal();
     });
     
-    // Filter modal events - REMOVED CLICK OUTSIDE TO CLOSE
+    // Filter modal events - NO CLICK OUTSIDE TO CLOSE
     document.getElementById('closeFilterModal').addEventListener('click', closeFilterModal);
     
     // Filter actions
@@ -703,21 +704,20 @@ function jumpToToday() {
 }
 
 function toggleScheduleCollapse() {
-    const scheduleContent = document.getElementById('scheduleContent');
-    const collapseBtn = document.getElementById('collapseBtn');
+    const unifiedContainer = document.getElementById('unifiedContainer');
+    const expandableContent = document.getElementById('expandableContent');
     const collapseIcon = document.getElementById('collapseIcon');
-    const headerControls = document.getElementById('headerControls');
     
-    if (scheduleContent.classList.contains('collapsed')) {
-        scheduleContent.classList.remove('collapsed');
-        collapseBtn.classList.add('expanded');
-        collapseIcon.className = 'fas fa-chevron-down';
-        headerControls.style.display = 'flex';
+    if (expandableContent.classList.contains('collapsed')) {
+        // Expand
+        expandableContent.classList.remove('collapsed');
+        unifiedContainer.classList.remove('collapsed');
+        collapseIcon.className = 'fas fa-chevron-up';
     } else {
-        scheduleContent.classList.add('collapsed');
-        collapseBtn.classList.remove('expanded');
-        collapseIcon.className = 'fas fa-chevron-right';
-        headerControls.style.display = 'none';
+        // Collapse
+        expandableContent.classList.add('collapsed');
+        unifiedContainer.classList.add('collapsed');
+        collapseIcon.className = 'fas fa-chevron-down';
     }
 }
 
@@ -725,6 +725,7 @@ function showLoading(show) {
     document.getElementById('loading').style.display = show ? 'flex' : 'none';
     document.getElementById('scheduleBody').style.display = show ? 'none' : 'block';
     document.getElementById('filterResults').style.display = show ? 'none' : 'block';
+    document.getElementById('bottomSeparator').style.display = show ? 'none' : 'block';
 }
 
 function showError() {
@@ -732,4 +733,5 @@ function showError() {
     document.getElementById('error').style.display = 'flex';
     document.getElementById('scheduleBody').style.display = 'none';
     document.getElementById('filterResults').style.display = 'none';
+    document.getElementById('bottomSeparator').style.display = 'none';
 }
