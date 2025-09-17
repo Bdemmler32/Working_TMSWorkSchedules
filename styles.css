@@ -166,12 +166,12 @@ body {
 
 .week-display {
     padding: 6px 12px;
-    background: #f8f9fa;
-    border: 1px solid #ddd;
+    background: #e3f2fd;
+    border: 1px solid #1976d2;
     border-radius: 6px;
     font-size: 12px;
     font-weight: 500;
-    color: #333;
+    color: #1976d2;
 }
 
 /* Loading and Error States */
@@ -193,7 +193,7 @@ body {
 
 /* Schedule Body */
 .schedule-body {
-    padding: 0 20px;
+    padding: 0 20px 10px 20px;
 }
 
 /* Schedule Grid - Single Unified Grid */
@@ -202,6 +202,7 @@ body {
     grid-template-columns: 140px repeat(5, 1fr);
     gap: 0;
     font-size: 12px;
+    border-left: 1px solid #e0e0e0;
 }
 
 /* Grid Cells - Headers and Data */
@@ -210,11 +211,6 @@ body {
     border-right: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
     box-sizing: border-box;
-}
-
-/* Add left border to employee column to mirror right border of Friday column */
-.grid-cell:first-child {
-    border-left: 1px solid #e0e0e0;
 }
 
 /* Header Cells */
@@ -354,7 +350,7 @@ body {
 .employee-last-name {
     font-weight: 500;
     font-size: 12px;
-    color: #666;
+    color: #333;
     margin-top: 1px;
 }
 
