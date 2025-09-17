@@ -1,0 +1,412 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: 100vh;
+}
+
+/* Header */
+.header {
+    background: white;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.date-navigation {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-btn {
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s;
+}
+
+.nav-btn:hover {
+    background: #e0e0e0;
+}
+
+.date-range {
+    font-size: 18px;
+    font-weight: 500;
+    min-width: 280px;
+    text-align: center;
+}
+
+.week-selector select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+}
+
+/* Loading and Error States */
+.loading, .error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+}
+
+.loading-text, .error-text {
+    font-size: 16px;
+    color: #666;
+}
+
+.error-text {
+    color: #d32f2f;
+}
+
+/* Schedule Body */
+.schedule-body {
+    margin: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Schedule Grid */
+.schedule-grid {
+    padding: 0;
+}
+
+/* Schedule Grid - Single Unified Grid */
+.schedule-grid {
+    display: grid;
+    grid-template-columns: 200px repeat(5, 1fr);
+    /* Rows will be dynamically set: auto for header + auto for each employee */
+}
+
+/* Grid Cells - Headers and Data */
+.grid-cell {
+    padding: 12px;
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    box-sizing: border-box;
+}
+
+/* Header Cells */
+.header-cell {
+    background: #f8f9fa;
+    font-weight: 600;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.header-cell.employee-header {
+    text-align: left;
+    background: #fff;
+}
+
+/* Employee Info Cells */
+.employee-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background: white;
+}
+
+.employee-cell:hover {
+    background-color: #f0f7ff;
+}
+
+/* Day Cells */
+.day-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 80px;
+    background: white;
+}
+
+/* Employee Row Styling */
+.schedule-grid > .grid-cell:nth-child(6n+1):not(.header-cell),
+.schedule-grid > .grid-cell:nth-child(6n+2):not(.header-cell),
+.schedule-grid > .grid-cell:nth-child(6n+3):not(.header-cell),
+.schedule-grid > .grid-cell:nth-child(6n+4):not(.header-cell),
+.schedule-grid > .grid-cell:nth-child(6n+5):not(.header-cell),
+.schedule-grid > .grid-cell:nth-child(6n):not(.header-cell) {
+    /* Default white background for odd employee rows */
+}
+
+/* Even employee rows (every other set of 6 cells) */
+.schedule-grid > .grid-cell:nth-child(12n+7),
+.schedule-grid > .grid-cell:nth-child(12n+8),
+.schedule-grid > .grid-cell:nth-child(12n+9),
+.schedule-grid > .grid-cell:nth-child(12n+10),
+.schedule-grid > .grid-cell:nth-child(12n+11),
+.schedule-grid > .grid-cell:nth-child(12n+12) {
+    background: #fafafa;
+}
+
+/* Hover effect for employee rows */
+.employee-row-hover .grid-cell {
+    background-color: #f0f7ff !important;
+}
+
+.employee-initials {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.employee-name {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+/* Work Blocks */
+.work-block {
+    background: #d1c4e9;
+    color: #4a148c;
+    border-radius: 16px;
+    padding: 6px 10px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 28px;
+}
+
+.work-block.office {
+    background: #ffeaa7;
+    color: #2d3436;
+}
+
+.work-block-icon {
+    font-size: 12px;
+    width: 14px;
+    text-align: center;
+}
+
+.work-block-time {
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 8px;
+    width: 95%;
+    max-width: 1000px;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+.close-btn:hover {
+    background: #f0f0f0;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.week-section {
+    margin-bottom: 30px;
+}
+
+.week-section h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.modal-schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    min-width: 0; /* Prevent grid overflow */
+}
+
+.modal-day {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 12px;
+    min-height: 120px;
+    min-width: 0; /* Prevent overflow */
+    overflow-wrap: break-word;
+}
+
+.modal-day-header {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+    text-align: center;
+    color: #666;
+}
+
+.modal-day-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.modal-work-block {
+    background: #d1c4e9;
+    color: #4a148c;
+    border-radius: 12px;
+    padding: 6px 8px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.modal-work-block.office {
+    background: #ffeaa7;
+    color: #2d3436;
+}
+
+.no-work {
+    color: #999;
+    font-size: 12px;
+    font-style: italic;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Employee Colors */
+.color-1 { background-color: #e53e3e; }
+.color-2 { background-color: #dd6b20; }
+.color-3 { background-color: #d69e2e; }
+.color-4 { background-color: #38a169; }
+.color-5 { background-color: #00a3c4; }
+.color-6 { background-color: #3182ce; }
+.color-7 { background-color: #805ad5; }
+.color-8 { background-color: #d53f8c; }
+.color-9 { background-color: #319795; }
+.color-10 { background-color: #2b6cb0; }
+.color-11 { background-color: #2d3748; }
+.color-12 { background-color: #744210; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        margin: 0;
+    }
+    
+    .header {
+        padding: 15px;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .schedule-body {
+        margin: 10px;
+        border-radius: 8px;
+    }
+    
+    .schedule-grid {
+        grid-template-columns: 150px repeat(5, 1fr);
+    }
+    
+    .grid-cell {
+        padding: 8px;
+    }
+    
+    .employee-initials {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+    
+    .employee-name {
+        font-size: 12px;
+    }
+    
+    .work-block {
+        font-size: 10px;
+        padding: 4px 6px;
+    }
+    
+    .modal-content {
+        width: 98%;
+        max-height: 90vh;
+        margin: 10px;
+    }
+    
+    .modal-schedule-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+}
