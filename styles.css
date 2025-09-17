@@ -200,7 +200,8 @@ body {
     gap: 0;
     font-size: 12px;
     border-left: 1px solid #e0e0e0;
-    min-width: 700px;
+    min-width: 680px;
+    width: 100%;
 }
 
 /* Grid Cells - Headers and Data */
