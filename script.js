@@ -218,10 +218,12 @@ function updateDisplay() {
 
 function updateWeekDisplay() {
     const weekDisplay = document.getElementById('weekDisplay');
-    if (currentWeekType === 1) {
-        weekDisplay.textContent = 'Week 1 - Pay Week';
-    } else {
-        weekDisplay.textContent = 'Week 2';
+    if (weekDisplay) {
+        if (currentWeekType === 1) {
+            weekDisplay.textContent = 'Week 1 - Pay Week';
+        } else {
+            weekDisplay.textContent = 'Week 2';
+        }
     }
 }
 
@@ -233,7 +235,10 @@ function updateDateRange() {
     const startStr = currentWeekStart.toLocaleDateString('en-US', options);
     const endStr = weekEnd.toLocaleDateString('en-US', options);
     
-    document.getElementById('dateRange').textContent = `${startStr} - ${endStr}`;
+    const dateRange = document.getElementById('dateRange');
+    if (dateRange) {
+        dateRange.textContent = `${startStr} - ${endStr}`;
+    }
 }
 
 function sortEmployees(employees) {
@@ -261,12 +266,14 @@ function toggleOfficeHoursFilter() {
 
 function updateOfficeHoursFilterButton() {
     const btn = document.getElementById('officeHoursFilterBtn');
-    if (officeHoursOnly) {
-        btn.classList.add('active');
-        btn.innerHTML = '<i class="fas fa-building"></i> Clear Office Filter';
-    } else {
-        btn.classList.remove('active');
-        btn.innerHTML = '<i class="fas fa-building"></i> Filter Office Hours';
+    if (btn) {
+        if (officeHoursOnly) {
+            btn.classList.add('active');
+            btn.innerHTML = '<i class="fas fa-building"></i> Clear Office Filter';
+        } else {
+            btn.classList.remove('active');
+            btn.innerHTML = '<i class="fas fa-building"></i> Filter Office Hours';
+        }
     }
 }
 
@@ -319,6 +326,8 @@ function isCurrentWeek() {
 
 function renderScheduleGrid() {
     const scheduleGrid = document.getElementById('scheduleGrid');
+    if (!scheduleGrid) return;
+    
     scheduleGrid.innerHTML = '';
     
     let employees = Object.keys(employeeData);
@@ -391,7 +400,10 @@ function renderScheduleGrid() {
             
             // Add click event to sort button
             setTimeout(() => {
-                document.getElementById('nameSortBtn').addEventListener('click', toggleNameSort);
+                const sortBtn = document.getElementById('nameSortBtn');
+                if (sortBtn) {
+                    sortBtn.addEventListener('click', toggleNameSort);
+                }
             }, 0);
         } else {
             headerCell.textContent = header;
@@ -676,29 +688,33 @@ function clearEmployeeFilter() {
 
 function updateFilterButton() {
     const filterBtn = document.getElementById('filterBtn');
-    if (isFilterActive || officeHoursOnly) {
-        filterBtn.innerHTML = '<i class="fas fa-times"></i> Clear Filter';
-        filterBtn.className = 'filter-btn clear-mode';
-    } else {
-        filterBtn.innerHTML = 'Filter Employees';
-        filterBtn.className = 'filter-btn';
+    if (filterBtn) {
+        if (isFilterActive || officeHoursOnly) {
+            filterBtn.innerHTML = '<i class="fas fa-times"></i> Clear Filter';
+            filterBtn.className = 'filter-btn clear-mode';
+        } else {
+            filterBtn.innerHTML = 'Filter Employees';
+            filterBtn.className = 'filter-btn';
+        }
     }
 }
 
 function updateFilterResults(displayedCount, totalCount) {
     const filterResultsText = document.getElementById('filterResultsText');
-    if (isFilterActive || officeHoursOnly) {
-        let filterDesc = '';
-        if (selectedEmployees.length > 0 && officeHoursOnly) {
-            filterDesc = ' (selected employees + office hours only)';
-        } else if (selectedEmployees.length > 0) {
-            filterDesc = ' (selected employees)';
-        } else if (officeHoursOnly) {
-            filterDesc = ' (office hours only)';
+    if (filterResultsText) {
+        if (isFilterActive || officeHoursOnly) {
+            let filterDesc = '';
+            if (selectedEmployees.length > 0 && officeHoursOnly) {
+                filterDesc = ' (selected employees + office hours only)';
+            } else if (selectedEmployees.length > 0) {
+                filterDesc = ' (selected employees)';
+            } else if (officeHoursOnly) {
+                filterDesc = ' (office hours only)';
+            }
+            filterResultsText.textContent = `Showing ${displayedCount} of ${totalCount} employees${filterDesc}`;
+        } else {
+            filterResultsText.textContent = `Showing all ${displayedCount} employees`;
         }
-        filterResultsText.textContent = `Showing ${displayedCount} of ${totalCount} employees${filterDesc}`;
-    } else {
-        filterResultsText.textContent = `Showing all ${displayedCount} employees`;
     }
 }
 
