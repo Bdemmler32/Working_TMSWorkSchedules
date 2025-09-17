@@ -22,6 +22,8 @@ function isCurrentWeek() {
 let employeeData = {};
 let currentWeekStart = null;
 let currentWeekType = 1; // 1 or 2
+let selectedEmployees = []; // For filtering
+let isFilterActive = false;
 
 // Week 1 starts on September 13, 2025
 const WEEK_1_START = new Date('2025-09-13T00:00:00');
@@ -40,6 +42,9 @@ function initializeEventListeners() {
     // Jump to Today button
     document.getElementById('jumpTodayBtn').addEventListener('click', jumpToToday);
     
+    // Filter button
+    document.getElementById('filterBtn').addEventListener('click', handleFilterBtn);
+    
     // Week selector
     document.getElementById('weekSelector').addEventListener('change', (e) => {
         currentWeekType = parseInt(e.target.value);
@@ -51,6 +56,20 @@ function initializeEventListeners() {
     document.getElementById('employeeModal').addEventListener('click', (e) => {
         if (e.target.id === 'employeeModal') closeModal();
     });
+    
+    // Filter modal events
+    document.getElementById('closeFilterModal').addEventListener('click', closeFilterModal);
+    document.getElementById('employeeFilterModal').addEventListener('click', (e) => {
+        if (e.target.id === 'employeeFilterModal') closeFilterModal();
+    });
+    
+    // Filter actions
+    document.getElementById('selectAllBtn').addEventListener('click', selectAllEmployees);
+    document.getElementById('deselectAllBtn').addEventListener('click', deselectAllEmployees);
+    document.getElementById('applyFilterBtn').addEventListener('click', applyEmployeeFilter);
+    
+    // Employee search
+    document.getElementById('employeeSearch').addEventListener('input', filterEmployeeList);
 }
 
 async function loadScheduleData() {
@@ -232,15 +251,25 @@ function renderScheduleGrid() {
     const colors = ['color-1', 'color-2', 'color-3', 'color-4', 'color-5', 'color-6', 
                    'color-7', 'color-8', 'color-9', 'color-10', 'color-11', 'color-12'];
     
-    // Filter employees with schedule data
-    const employeesWithData = employees.filter(employeeName => {
-        const employee = employeeData[employeeName];
-        const weekData = currentWeekType === 1 ? employee.week1 : employee.week2;
-        return hasScheduleData(weekData);
-    });
+    // Filter employees based on selection and schedule data
+    let filteredEmployees;
+    if (isFilterActive && selectedEmployees.length > 0) {
+        filteredEmployees = selectedEmployees.filter(employeeName => {
+            const employee = employeeData[employeeName];
+            if (!employee) return false;
+            const weekData = currentWeekType === 1 ? employee.week1 : employee.week2;
+            return hasScheduleData(weekData);
+        });
+    } else {
+        filteredEmployees = employees.filter(employeeName => {
+            const employee = employeeData[employeeName];
+            const weekData = currentWeekType === 1 ? employee.week1 : employee.week2;
+            return hasScheduleData(weekData);
+        });
+    }
     
-    // Set grid rows: 1 header row + number of employees with data
-    scheduleGrid.style.gridTemplateRows = `auto repeat(${employeesWithData.length}, auto)`;
+    // Set grid rows: 1 header row + number of filtered employees
+    scheduleGrid.style.gridTemplateRows = `auto repeat(${filteredEmployees.length}, auto)`;
     
     // Get current day info
     const currentDayIndex = getCurrentDayOfWeek();
@@ -263,10 +292,10 @@ function renderScheduleGrid() {
     });
     
     // Create employee rows
-    employeesWithData.forEach((employeeName, employeeIndex) => {
+    filteredEmployees.forEach((employeeName, employeeIndex) => {
         const employee = employeeData[employeeName];
         const weekData = currentWeekType === 1 ? employee.week1 : employee.week2;
-        const colorClass = colors[employeeIndex % colors.length];
+        const colorClass = colors[employees.indexOf(employeeName) % colors.length]; // Use original index for consistent colors
         
         // Store row cells for hover effect
         const rowCells = [];
@@ -327,6 +356,129 @@ function renderScheduleGrid() {
             });
         });
     });
+    
+    updateFilterResults(filteredEmployees.length, employees.length);
+}
+
+// Filter functionality
+function handleFilterBtn() {
+    if (isFilterActive) {
+        clearEmployeeFilter();
+    } else {
+        openEmployeeFilterModal();
+    }
+}
+
+function openEmployeeFilterModal() {
+    const modal = document.getElementById('employeeFilterModal');
+    populateEmployeeFilterList();
+    modal.style.display = 'flex';
+}
+
+function closeFilterModal() {
+    document.getElementById('employeeFilterModal').style.display = 'none';
+}
+
+function populateEmployeeFilterList() {
+    const employeeList = document.getElementById('employeeFilterList');
+    const employees = Object.keys(employeeData).sort();
+    const colors = ['color-1', 'color-2', 'color-3', 'color-4', 'color-5', 'color-6', 
+                   'color-7', 'color-8', 'color-9', 'color-10', 'color-11', 'color-12'];
+    
+    employeeList.innerHTML = '';
+    
+    employees.forEach((employeeName, index) => {
+        const colorClass = colors[index % colors.length];
+        const initials = getInitials(employeeName);
+        
+        const item = document.createElement('div');
+        item.className = 'employee-checkbox-item';
+        item.dataset.employeeName = employeeName;
+        
+        const isChecked = selectedEmployees.includes(employeeName);
+        
+        item.innerHTML = `
+            <input type="checkbox" id="emp-${index}" ${isChecked ? 'checked' : ''}>
+            <div class="employee-checkbox-info">
+                <div class="employee-checkbox-initials ${colorClass}">${initials}</div>
+                <span>${employeeName}</span>
+            </div>
+        `;
+        
+        // Add click event to the entire item
+        item.addEventListener('click', (e) => {
+            if (e.target.type !== 'checkbox') {
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                checkbox.checked = !checkbox.checked;
+            }
+        });
+        
+        employeeList.appendChild(item);
+    });
+}
+
+function filterEmployeeList() {
+    const searchTerm = document.getElementById('employeeSearch').value.toLowerCase();
+    const items = document.querySelectorAll('.employee-checkbox-item');
+    
+    items.forEach(item => {
+        const employeeName = item.dataset.employeeName.toLowerCase();
+        const matches = employeeName.includes(searchTerm);
+        item.style.display = matches ? 'flex' : 'none';
+    });
+}
+
+function selectAllEmployees() {
+    const visibleCheckboxes = document.querySelectorAll('.employee-checkbox-item:not([style*="display: none"]) input[type="checkbox"]');
+    visibleCheckboxes.forEach(checkbox => {
+        checkbox.checked = true;
+    });
+}
+
+function deselectAllEmployees() {
+    const visibleCheckboxes = document.querySelectorAll('.employee-checkbox-item:not([style*="display: none"]) input[type="checkbox"]');
+    visibleCheckboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+}
+
+function applyEmployeeFilter() {
+    const checkedBoxes = document.querySelectorAll('.employee-checkbox-item input[type="checkbox"]:checked');
+    selectedEmployees = Array.from(checkedBoxes).map(checkbox => {
+        return checkbox.closest('.employee-checkbox-item').dataset.employeeName;
+    });
+    
+    isFilterActive = selectedEmployees.length > 0;
+    updateFilterButton();
+    closeFilterModal();
+    updateDisplay();
+}
+
+function clearEmployeeFilter() {
+    selectedEmployees = [];
+    isFilterActive = false;
+    updateFilterButton();
+    updateDisplay();
+}
+
+function updateFilterButton() {
+    const filterBtn = document.getElementById('filterBtn');
+    if (isFilterActive) {
+        filterBtn.innerHTML = '<i class="fas fa-times"></i> Clear Filter';
+        filterBtn.className = 'filter-btn clear-mode';
+    } else {
+        filterBtn.innerHTML = 'Filter Employees';
+        filterBtn.className = 'filter-btn';
+    }
+}
+
+function updateFilterResults(displayedCount, totalCount) {
+    const filterResultsText = document.getElementById('filterResultsText');
+    if (isFilterActive) {
+        filterResultsText.textContent = `Showing ${displayedCount} of ${totalCount} employees`;
+    } else {
+        filterResultsText.textContent = `Showing all ${displayedCount} employees`;
+    }
 }
 
 function jumpToToday() {
@@ -419,10 +571,12 @@ function closeModal() {
 function showLoading(show) {
     document.getElementById('loading').style.display = show ? 'flex' : 'none';
     document.getElementById('scheduleBody').style.display = show ? 'none' : 'block';
+    document.getElementById('filterResults').style.display = show ? 'none' : 'block';
 }
 
 function showError() {
     document.getElementById('loading').style.display = 'none';
     document.getElementById('error').style.display = 'flex';
     document.getElementById('scheduleBody').style.display = 'none';
+    document.getElementById('filterResults').style.display = 'none';
 }

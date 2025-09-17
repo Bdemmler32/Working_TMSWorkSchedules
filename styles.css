@@ -1,4 +1,4 @@
-* {
+/* Responsive */* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -63,7 +63,7 @@ body {
     gap: 12px;
 }
 
-.jump-today-btn {
+.jump-today-btn, .filter-btn {
     padding: 8px 16px;
     border: 1px solid #ddd;
     border-radius: 6px;
@@ -71,10 +71,23 @@ body {
     background: white;
     cursor: pointer;
     transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
-.jump-today-btn:hover {
+.jump-today-btn:hover, .filter-btn:hover {
     background: #f0f0f0;
+}
+
+.filter-btn.clear-mode {
+    background: #fee;
+    border-color: #d32f2f;
+    color: #d32f2f;
+}
+
+.filter-btn.clear-mode:hover {
+    background: #ffebee;
 }
 
 .week-selector select {
@@ -393,7 +406,116 @@ body {
 .color-11 { background-color: #2d3748; }
 .color-12 { background-color: #744210; }
 
-/* Responsive */
+/* Filter Results */
+.filter-results {
+    margin: 20px;
+    padding: 12px 16px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+}
+
+/* Filter Modal */
+.filter-modal-content {
+    width: 95%;
+    max-width: 500px;
+}
+
+.search-container {
+    margin-bottom: 20px;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.employee-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 20px;
+}
+
+.employee-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.employee-checkbox-item:hover {
+    background: #f8f9fa;
+}
+
+.employee-checkbox-item input[type="checkbox"] {
+    margin: 0;
+}
+
+.employee-checkbox-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.employee-checkbox-initials {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 10px;
+    flex-shrink: 0;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.filter-actions button {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.select-all-btn, .deselect-all-btn {
+    background: white;
+}
+
+.select-all-btn:hover, .deselect-all-btn:hover {
+    background: #f0f0f0;
+}
+
+.apply-filter-btn {
+    background: #1976d2;
+    color: white;
+    border-color: #1976d2;
+}
+
+.apply-filter-btn:hover {
+    background: #1565c0;
+}
 @media (max-width: 768px) {
     .container {
         margin: 0;

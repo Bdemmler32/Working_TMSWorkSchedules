@@ -19,6 +19,7 @@
             </div>
             <div class="week-selector">
                 <button class="jump-today-btn" id="jumpTodayBtn">Jump to Today</button>
+                <button class="filter-btn" id="filterBtn">Filter Employees</button>
                 <select id="weekSelector">
                     <option value="1">Week 1</option>
                     <option value="2">Week 2</option>
@@ -42,6 +43,11 @@
                 <!-- Headers and employee rows will be populated by JavaScript as one unified grid -->
             </div>
         </div>
+
+        <!-- Filter Results Indicator -->
+        <div class="filter-results" id="filterResults">
+            <span id="filterResultsText">Loading...</span>
+        </div>
     </div>
 
     <!-- Employee Modal -->
@@ -63,6 +69,29 @@
                     <div class="modal-schedule-grid" id="otherWeekGrid">
                         <!-- Other week schedule -->
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Employee Filter Modal -->
+    <div class="modal" id="employeeFilterModal" style="display: none;">
+        <div class="modal-content filter-modal-content">
+            <div class="modal-header">
+                <h2>Filter Employees</h2>
+                <button class="close-btn" id="closeFilterModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="search-container">
+                    <input type="text" id="employeeSearch" placeholder="Search employees by first or last name...">
+                </div>
+                <div class="employee-list" id="employeeFilterList">
+                    <!-- Employee checkboxes will be populated here -->
+                </div>
+                <div class="filter-actions">
+                    <button class="select-all-btn" id="selectAllBtn">Select All</button>
+                    <button class="deselect-all-btn" id="deselectAllBtn">Deselect All</button>
+                    <button class="apply-filter-btn" id="applyFilterBtn">Apply Filter</button>
                 </div>
             </div>
         </div>
