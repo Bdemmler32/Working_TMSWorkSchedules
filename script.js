@@ -14,6 +14,8 @@ const WEEK_1_START = new Date('2025-09-13T00:00:00');
 document.addEventListener('DOMContentLoaded', function() {
     initializeEventListeners();
     loadScheduleData();
+    // Start collapsed by default
+    document.getElementById('scheduleContent').classList.add('collapsed');
 });
 
 function initializeEventListeners() {
@@ -417,7 +419,7 @@ function renderScheduleGrid() {
         const initials = getInitials(employeeName);
         employeeCell.innerHTML = `
             <div class="employee-initials ${colorClass}">${initials}</div>
-            <div class="employee-name">${employeeName}</div>
+            <div class="employee-name">${formatEmployeeName(employeeName)}</div>
         `;
         
         scheduleGrid.appendChild(employeeCell);
@@ -479,6 +481,16 @@ function getInitials(name) {
                .map(word => word.charAt(0).toUpperCase())
                .join('')
                .substring(0, 2);
+}
+
+function formatEmployeeName(name) {
+    const parts = name.split(' ');
+    if (parts.length >= 2) {
+        const firstName = parts[0];
+        const lastName = parts.slice(1).join(' ');
+        return `<div class="employee-first-name">${firstName}</div><div class="employee-last-name">${lastName}</div>`;
+    }
+    return `<div class="employee-first-name">${name}</div>`;
 }
 
 function openEmployeeModal(employeeName) {
@@ -694,15 +706,18 @@ function toggleScheduleCollapse() {
     const scheduleContent = document.getElementById('scheduleContent');
     const collapseBtn = document.getElementById('collapseBtn');
     const collapseIcon = document.getElementById('collapseIcon');
+    const headerControls = document.getElementById('headerControls');
     
     if (scheduleContent.classList.contains('collapsed')) {
         scheduleContent.classList.remove('collapsed');
-        collapseBtn.classList.remove('collapsed');
+        collapseBtn.classList.add('expanded');
         collapseIcon.className = 'fas fa-chevron-down';
+        headerControls.style.display = 'flex';
     } else {
         scheduleContent.classList.add('collapsed');
-        collapseBtn.classList.add('collapsed');
+        collapseBtn.classList.remove('expanded');
         collapseIcon.className = 'fas fa-chevron-right';
+        headerControls.style.display = 'none';
     }
 }
 

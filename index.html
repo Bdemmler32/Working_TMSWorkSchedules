@@ -10,31 +10,29 @@
 </head>
 <body>
     <div class="container">
-        <!-- Main Header -->
-        <div class="main-header">
-            <div class="main-header-content" id="mainHeaderContent">
-                <h1>TMS Staff Work Schedules</h1>
-                <button class="collapse-btn" id="collapseBtn">
-                    <i class="fas fa-chevron-down" id="collapseIcon"></i>
-                </button>
-            </div>
-        </div>
-
         <!-- Collapsible Schedule Content -->
         <div class="schedule-content" id="scheduleContent">
-            <!-- Header -->
+            <!-- Header with Title and Controls -->
             <div class="header">
-                <div class="date-navigation">
-                    <button class="nav-btn" id="prevWeek">&lt;</button>
-                    <div class="date-range-container">
-                        <span class="date-range" id="dateRange">Loading...</span>
-                    </div>
-                    <button class="nav-btn" id="nextWeek">&gt;</button>
+                <div class="header-title-section">
+                    <h1>TMS Staff Work Schedules</h1>
+                    <button class="collapse-btn" id="collapseBtn">
+                        <i class="fas fa-chevron-right" id="collapseIcon"></i>
+                    </button>
                 </div>
-                <div class="week-selector">
-                    <button class="jump-today-btn" id="jumpTodayBtn">Jump to Today</button>
-                    <button class="filter-btn" id="filterBtn">Filter Employees</button>
-                    <span class="week-display" id="weekDisplay">Week 1</span>
+                <div class="header-controls" id="headerControls" style="display: none;">
+                    <div class="date-navigation">
+                        <button class="nav-btn" id="prevWeek">&lt;</button>
+                        <div class="date-range-container">
+                            <span class="date-range" id="dateRange">Loading...</span>
+                        </div>
+                        <button class="nav-btn" id="nextWeek">&gt;</button>
+                    </div>
+                    <div class="week-selector">
+                        <button class="jump-today-btn" id="jumpTodayBtn">Jump to Today</button>
+                        <button class="filter-btn" id="filterBtn">Filter Employees</button>
+                        <span class="week-display" id="weekDisplay">Week 1</span>
+                    </div>
                 </div>
             </div>
 
