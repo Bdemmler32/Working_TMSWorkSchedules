@@ -153,11 +153,42 @@ body {
     position: sticky;
     top: 0;
     z-index: 10;
+    position: relative;
 }
 
 .header-cell.employee-header {
     text-align: left;
     background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.employee-header-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.name-sort-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 3px;
+    color: #666;
+    transition: all 0.2s;
+    font-size: 12px;
+}
+
+.name-sort-btn:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.name-sort-btn.active {
+    color: #1976d2;
+    background: #e3f2fd;
 }
 
 .header-cell.current-day {
@@ -486,11 +517,44 @@ body {
 
 .filter-actions {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     gap: 12px;
-    justify-content: flex-end;
 }
 
-.filter-actions button {
+.office-hours-filter-btn {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+    background: white;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.office-hours-filter-btn:hover {
+    background: #f0f0f0;
+}
+
+.office-hours-filter-btn.active {
+    background: #e8f5e8;
+    border-color: #4caf50;
+    color: #2e7d32;
+}
+
+.office-hours-filter-btn.active:hover {
+    background: #f1f8e9;
+}
+
+.filter-action-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.filter-action-buttons button {
     padding: 8px 16px;
     border: 1px solid #ddd;
     border-radius: 6px;

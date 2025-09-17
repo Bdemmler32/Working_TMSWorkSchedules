@@ -1,4 +1,61 @@
-function getCurrentDayOfWeek() {
+function sortEmployees(employees) {
+    return employees.sort((a, b) => {
+        if (nameSortOrder === 'first') {
+            return a.localeCompare(b);
+        } else {
+            // Sort by last name
+            const lastNameA = a.split(' ').pop();
+            const lastNameB = b.split(' ').pop();
+            return lastNameA.localeCompare(lastNameB);
+        }
+    });
+}
+
+function toggleNameSort() {
+    nameSortOrder = nameSortOrder === 'first' ? 'last' : 'first';
+    updateDisplay();
+}
+
+function toggleOfficeHoursFilter() {
+    officeHoursOnly = !officeHoursOnly;
+    updateOfficeHoursFilterButton();
+}
+
+function updateOfficeHoursFilterButton() {
+    const btn = document.getElementById('officeHoursFilterBtn');
+    if (officeHoursOnly) {
+        btn.classList.add('active');
+        btn.innerHTML = '<i class="fas fa-building"></i> Clear Office Filter';
+    } else {
+        btn.classList.remove('active');
+        btn.innerHTML = '<i class="fas fa-building"></i> Filter Office Hours';
+    }
+}
+
+function hasOfficeHours(employee, weekData) {
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    return days.some(day => {
+        const daySchedule = weekData[day] || [];
+        return daySchedule.some(block => block.location.toLowerCase() === 'office');
+    });
+}
+
+function filterOfficeHoursOnly(weekData) {
+    const filteredData = {};
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    
+    days.forEach(day => {
+        const daySchedule = weekData[day] || [];
+        const officeBlocks = daySchedule.filter(block => 
+            block.location.toLowerCase() === 'office'
+        );
+        if (officeBlocks.length > 0) {
+            filteredData[day] = officeBlocks;
+        }
+    });
+    
+    return filteredData;
+}
     const today = new Date();
     const dayIndex = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
     
@@ -24,6 +81,8 @@ let currentWeekStart = null;
 let currentWeekType = 1; // 1 or 2
 let selectedEmployees = []; // For filtering
 let isFilterActive = false;
+let nameSortOrder = 'first'; // 'first' or 'last'
+let officeHoursOnly = false;
 
 // Week 1 starts on September 13, 2025
 const WEEK_1_START = new Date('2025-09-13T00:00:00');
@@ -67,6 +126,7 @@ function initializeEventListeners() {
     document.getElementById('selectAllBtn').addEventListener('click', selectAllEmployees);
     document.getElementById('deselectAllBtn').addEventListener('click', deselectAllEmployees);
     document.getElementById('applyFilterBtn').addEventListener('click', applyEmployeeFilter);
+    document.getElementById('officeHoursFilterBtn').addEventListener('click', toggleOfficeHoursFilter);
     
     // Employee search
     document.getElementById('employeeSearch').addEventListener('input', filterEmployeeList);
@@ -372,6 +432,7 @@ function handleFilterBtn() {
 function openEmployeeFilterModal() {
     const modal = document.getElementById('employeeFilterModal');
     populateEmployeeFilterList();
+    updateOfficeHoursFilterButton(); // Update button state when opening modal
     modal.style.display = 'flex';
 }
 
@@ -381,14 +442,17 @@ function closeFilterModal() {
 
 function populateEmployeeFilterList() {
     const employeeList = document.getElementById('employeeFilterList');
-    const employees = Object.keys(employeeData).sort();
+    let employees = Object.keys(employeeData);
+    employees = sortEmployees(employees);
+    
     const colors = ['color-1', 'color-2', 'color-3', 'color-4', 'color-5', 'color-6', 
                    'color-7', 'color-8', 'color-9', 'color-10', 'color-11', 'color-12'];
     
     employeeList.innerHTML = '';
     
-    employees.forEach((employeeName, index) => {
-        const colorClass = colors[index % colors.length];
+    employees.forEach((employeeName) => {
+        const originalIndex = Object.keys(employeeData).sort().indexOf(employeeName);
+        const colorClass = colors[originalIndex % colors.length];
         const initials = getInitials(employeeName);
         
         const item = document.createElement('div');
@@ -398,7 +462,7 @@ function populateEmployeeFilterList() {
         const isChecked = selectedEmployees.includes(employeeName);
         
         item.innerHTML = `
-            <input type="checkbox" id="emp-${index}" ${isChecked ? 'checked' : ''}>
+            <input type="checkbox" id="emp-${originalIndex}" ${isChecked ? 'checked' : ''}>
             <div class="employee-checkbox-info">
                 <div class="employee-checkbox-initials ${colorClass}">${initials}</div>
                 <span>${employeeName}</span>
@@ -448,7 +512,7 @@ function applyEmployeeFilter() {
         return checkbox.closest('.employee-checkbox-item').dataset.employeeName;
     });
     
-    isFilterActive = selectedEmployees.length > 0;
+    isFilterActive = selectedEmployees.length > 0 || officeHoursOnly; // Consider office filter too
     updateFilterButton();
     closeFilterModal();
     updateDisplay();
@@ -457,13 +521,14 @@ function applyEmployeeFilter() {
 function clearEmployeeFilter() {
     selectedEmployees = [];
     isFilterActive = false;
+    officeHoursOnly = false; // Also clear office hours filter
     updateFilterButton();
     updateDisplay();
 }
 
 function updateFilterButton() {
     const filterBtn = document.getElementById('filterBtn');
-    if (isFilterActive) {
+    if (isFilterActive || officeHoursOnly) {
         filterBtn.innerHTML = '<i class="fas fa-times"></i> Clear Filter';
         filterBtn.className = 'filter-btn clear-mode';
     } else {
@@ -474,8 +539,16 @@ function updateFilterButton() {
 
 function updateFilterResults(displayedCount, totalCount) {
     const filterResultsText = document.getElementById('filterResultsText');
-    if (isFilterActive) {
-        filterResultsText.textContent = `Showing ${displayedCount} of ${totalCount} employees`;
+    if (isFilterActive || officeHoursOnly) {
+        let filterDesc = '';
+        if (selectedEmployees.length > 0 && officeHoursOnly) {
+            filterDesc = ' (selected employees + office hours only)';
+        } else if (selectedEmployees.length > 0) {
+            filterDesc = ' (selected employees)';
+        } else if (officeHoursOnly) {
+            filterDesc = ' (office hours only)';
+        }
+        filterResultsText.textContent = `Showing ${displayedCount} of ${totalCount} employees${filterDesc}`;
     } else {
         filterResultsText.textContent = `Showing all ${displayedCount} employees`;
     }
