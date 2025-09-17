@@ -212,6 +212,11 @@ body {
     box-sizing: border-box;
 }
 
+/* Add left border to employee column to mirror right border of Friday column */
+.grid-cell:first-child {
+    border-left: 1px solid #e0e0e0;
+}
+
 /* Header Cells */
 .header-cell {
     background: #f8f9fa;
@@ -307,7 +312,7 @@ body {
 
 .day-cell.current-day {
     background: #f3f8ff;
-    border-left: 3px solid #1976d2;
+    /* Removed border-left: 3px solid #1976d2; */
 }
 
 /* Hover effect for employee rows */
@@ -342,11 +347,13 @@ body {
 }
 
 .employee-first-name {
-    font-weight: 600;
+    font-weight: 500;
+    font-size: 12px;
 }
 
 .employee-last-name {
-    font-size: 11px;
+    font-weight: 500;
+    font-size: 12px;
     color: #666;
     margin-top: 1px;
 }
@@ -378,7 +385,7 @@ body {
 .work-block-time {
     font-weight: 500;
     white-space: nowrap;
-    font-size: 10px;
+    font-size: 11px;
 }
 
 /* Filter Results */
@@ -637,7 +644,7 @@ body {
     border: 1px solid #ddd;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
     transition: background-color 0.2s;
 }
 

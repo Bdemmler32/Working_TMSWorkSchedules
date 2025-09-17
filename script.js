@@ -593,6 +593,13 @@ function openEmployeeFilterModal() {
     const modal = document.getElementById('employeeFilterModal');
     populateEmployeeFilterList();
     updateOfficeHoursFilterButton();
+    
+    // Clear search bar when opening modal
+    const searchInput = document.getElementById('employeeSearch');
+    if (searchInput) {
+        searchInput.value = '';
+    }
+    
     modal.style.display = 'flex';
 }
 
@@ -634,6 +641,17 @@ function populateEmployeeFilterList() {
             if (e.target.type !== 'checkbox') {
                 const checkbox = item.querySelector('input[type="checkbox"]');
                 checkbox.checked = !checkbox.checked;
+            }
+            
+            // Clear search bar when checkbox is clicked
+            const searchInput = document.getElementById('employeeSearch');
+            if (searchInput) {
+                searchInput.value = '';
+                // Show all items again
+                const allItems = document.querySelectorAll('.employee-checkbox-item');
+                allItems.forEach(allItem => {
+                    allItem.style.display = 'flex';
+                });
             }
         });
         
