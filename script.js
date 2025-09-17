@@ -1,81 +1,4 @@
-function sortEmployees(employees) {
-    return employees.sort((a, b) => {
-        if (nameSortOrder === 'first') {
-            return a.localeCompare(b);
-        } else {
-            // Sort by last name
-            const lastNameA = a.split(' ').pop();
-            const lastNameB = b.split(' ').pop();
-            return lastNameA.localeCompare(lastNameB);
-        }
-    });
-}
-
-function toggleNameSort() {
-    nameSortOrder = nameSortOrder === 'first' ? 'last' : 'first';
-    updateDisplay();
-}
-
-function toggleOfficeHoursFilter() {
-    officeHoursOnly = !officeHoursOnly;
-    updateOfficeHoursFilterButton();
-}
-
-function updateOfficeHoursFilterButton() {
-    const btn = document.getElementById('officeHoursFilterBtn');
-    if (officeHoursOnly) {
-        btn.classList.add('active');
-        btn.innerHTML = '<i class="fas fa-building"></i> Clear Office Filter';
-    } else {
-        btn.classList.remove('active');
-        btn.innerHTML = '<i class="fas fa-building"></i> Filter Office Hours';
-    }
-}
-
-function hasOfficeHours(employee, weekData) {
-    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-    return days.some(day => {
-        const daySchedule = weekData[day] || [];
-        return daySchedule.some(block => block.location.toLowerCase() === 'office');
-    });
-}
-
-function filterOfficeHoursOnly(weekData) {
-    const filteredData = {};
-    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-    
-    days.forEach(day => {
-        const daySchedule = weekData[day] || [];
-        const officeBlocks = daySchedule.filter(block => 
-            block.location.toLowerCase() === 'office'
-        );
-        if (officeBlocks.length > 0) {
-            filteredData[day] = officeBlocks;
-        }
-    });
-    
-    return filteredData;
-}
-    const today = new Date();
-    const dayIndex = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
-    
-    // Convert to our format (Monday = 0, Tuesday = 1, etc.)
-    // Return -1 if today is weekend (not shown in schedule)
-    if (dayIndex === 0 || dayIndex === 6) return -1; // Sunday or Saturday
-    return dayIndex - 1; // Monday = 0, Tuesday = 1, etc.
-}
-
-function isCurrentWeek() {
-    const today = new Date();
-    const todayStart = new Date(today);
-    todayStart.setHours(0, 0, 0, 0);
-    
-    const currentWeekEnd = new Date(currentWeekStart);
-    currentWeekEnd.setDate(currentWeekEnd.getDate() + 6);
-    currentWeekEnd.setHours(23, 59, 59, 999);
-    
-    return todayStart >= currentWeekStart && todayStart <= currentWeekEnd;
-}// Global variables
+// Global variables
 let employeeData = {};
 let currentWeekStart = null;
 let currentWeekType = 1; // 1 or 2
@@ -246,7 +169,6 @@ function excelDateToTime(excelDate) {
 
 function orderTimes(startTime, endTime) {
     // Don't reorder times - keep them as they appear in the Excel file
-    // The issue was that we were incorrectly reordering valid times
     return [startTime, endTime];
 }
 
@@ -303,11 +225,94 @@ function updateDateRange() {
     document.getElementById('dateRange').textContent = `${startStr} - ${endStr}`;
 }
 
+function sortEmployees(employees) {
+    return employees.sort((a, b) => {
+        if (nameSortOrder === 'first') {
+            return a.localeCompare(b);
+        } else {
+            // Sort by last name
+            const lastNameA = a.split(' ').pop();
+            const lastNameB = b.split(' ').pop();
+            return lastNameA.localeCompare(lastNameB);
+        }
+    });
+}
+
+function toggleNameSort() {
+    nameSortOrder = nameSortOrder === 'first' ? 'last' : 'first';
+    updateDisplay();
+}
+
+function toggleOfficeHoursFilter() {
+    officeHoursOnly = !officeHoursOnly;
+    updateOfficeHoursFilterButton();
+}
+
+function updateOfficeHoursFilterButton() {
+    const btn = document.getElementById('officeHoursFilterBtn');
+    if (officeHoursOnly) {
+        btn.classList.add('active');
+        btn.innerHTML = '<i class="fas fa-building"></i> Clear Office Filter';
+    } else {
+        btn.classList.remove('active');
+        btn.innerHTML = '<i class="fas fa-building"></i> Filter Office Hours';
+    }
+}
+
+function hasOfficeHours(employee, weekData) {
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    return days.some(day => {
+        const daySchedule = weekData[day] || [];
+        return daySchedule.some(block => block.location.toLowerCase() === 'office');
+    });
+}
+
+function filterOfficeHoursOnly(weekData) {
+    const filteredData = {};
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    
+    days.forEach(day => {
+        const daySchedule = weekData[day] || [];
+        const officeBlocks = daySchedule.filter(block => 
+            block.location.toLowerCase() === 'office'
+        );
+        if (officeBlocks.length > 0) {
+            filteredData[day] = officeBlocks;
+        }
+    });
+    
+    return filteredData;
+}
+
+function getCurrentDayOfWeek() {
+    const today = new Date();
+    const dayIndex = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    
+    // Convert to our format (Monday = 0, Tuesday = 1, etc.)
+    // Return -1 if today is weekend (not shown in schedule)
+    if (dayIndex === 0 || dayIndex === 6) return -1; // Sunday or Saturday
+    return dayIndex - 1; // Monday = 0, Tuesday = 1, etc.
+}
+
+function isCurrentWeek() {
+    const today = new Date();
+    const todayStart = new Date(today);
+    todayStart.setHours(0, 0, 0, 0);
+    
+    const currentWeekEnd = new Date(currentWeekStart);
+    currentWeekEnd.setDate(currentWeekEnd.getDate() + 6);
+    currentWeekEnd.setHours(23, 59, 59, 999);
+    
+    return todayStart >= currentWeekStart && todayStart <= currentWeekEnd;
+}
+
 function renderScheduleGrid() {
     const scheduleGrid = document.getElementById('scheduleGrid');
     scheduleGrid.innerHTML = '';
     
-    const employees = Object.keys(employeeData).sort();
+    let employees = Object.keys(employeeData);
+    employees = sortEmployees(employees);
+    
     const colors = ['color-1', 'color-2', 'color-3', 'color-4', 'color-5', 'color-6', 
                    'color-7', 'color-8', 'color-9', 'color-10', 'color-11', 'color-12'];
     
@@ -317,13 +322,27 @@ function renderScheduleGrid() {
         filteredEmployees = selectedEmployees.filter(employeeName => {
             const employee = employeeData[employeeName];
             if (!employee) return false;
-            const weekData = currentWeekType === 1 ? employee.week1 : employee.week2;
+            let weekData = currentWeekType === 1 ? employee.week1 : employee.week2;
+            
+            // Apply office filter if active
+            if (officeHoursOnly) {
+                if (!hasOfficeHours(employee, weekData)) return false;
+                weekData = filterOfficeHoursOnly(weekData);
+            }
+            
             return hasScheduleData(weekData);
         });
+        filteredEmployees = sortEmployees(filteredEmployees);
     } else {
         filteredEmployees = employees.filter(employeeName => {
             const employee = employeeData[employeeName];
-            const weekData = currentWeekType === 1 ? employee.week1 : employee.week2;
+            let weekData = currentWeekType === 1 ? employee.week1 : employee.week2;
+            
+            // Apply office filter if active
+            if (officeHoursOnly && !hasOfficeHours(employee, weekData)) {
+                return false;
+            }
+            
             return hasScheduleData(weekData);
         });
     }
@@ -347,15 +366,41 @@ function renderScheduleGrid() {
         }
         
         headerCell.className = className;
-        headerCell.textContent = header;
+        
+        if (index === 0) {
+            // Employee header with sort button
+            headerCell.innerHTML = `
+                <div class="employee-header-content">
+                    <span>Employee</span>
+                    <button class="name-sort-btn ${nameSortOrder === 'last' ? 'active' : ''}" id="nameSortBtn" title="Toggle First/Last Name Sort">
+                        <i class="fas fa-sort-alpha-${nameSortOrder === 'first' ? 'down' : 'up'}"></i>
+                    </button>
+                </div>
+            `;
+            
+            // Add click event to sort button
+            setTimeout(() => {
+                document.getElementById('nameSortBtn').addEventListener('click', toggleNameSort);
+            }, 0);
+        } else {
+            headerCell.textContent = header;
+        }
+        
         scheduleGrid.appendChild(headerCell);
     });
     
     // Create employee rows
     filteredEmployees.forEach((employeeName, employeeIndex) => {
         const employee = employeeData[employeeName];
-        const weekData = currentWeekType === 1 ? employee.week1 : employee.week2;
-        const colorClass = colors[employees.indexOf(employeeName) % colors.length]; // Use original index for consistent colors
+        let weekData = currentWeekType === 1 ? employee.week1 : employee.week2;
+        
+        // Apply office filter to week data if active
+        if (officeHoursOnly) {
+            weekData = filterOfficeHoursOnly(weekData);
+        }
+        
+        const originalIndex = employees.indexOf(employeeName);
+        const colorClass = colors[originalIndex % colors.length]; // Use original index for consistent colors
         
         // Store row cells for hover effect
         const rowCells = [];
@@ -418,145 +463,6 @@ function renderScheduleGrid() {
     });
     
     updateFilterResults(filteredEmployees.length, employees.length);
-}
-
-// Filter functionality
-function handleFilterBtn() {
-    if (isFilterActive) {
-        clearEmployeeFilter();
-    } else {
-        openEmployeeFilterModal();
-    }
-}
-
-function openEmployeeFilterModal() {
-    const modal = document.getElementById('employeeFilterModal');
-    populateEmployeeFilterList();
-    updateOfficeHoursFilterButton(); // Update button state when opening modal
-    modal.style.display = 'flex';
-}
-
-function closeFilterModal() {
-    document.getElementById('employeeFilterModal').style.display = 'none';
-}
-
-function populateEmployeeFilterList() {
-    const employeeList = document.getElementById('employeeFilterList');
-    let employees = Object.keys(employeeData);
-    employees = sortEmployees(employees);
-    
-    const colors = ['color-1', 'color-2', 'color-3', 'color-4', 'color-5', 'color-6', 
-                   'color-7', 'color-8', 'color-9', 'color-10', 'color-11', 'color-12'];
-    
-    employeeList.innerHTML = '';
-    
-    employees.forEach((employeeName) => {
-        const originalIndex = Object.keys(employeeData).sort().indexOf(employeeName);
-        const colorClass = colors[originalIndex % colors.length];
-        const initials = getInitials(employeeName);
-        
-        const item = document.createElement('div');
-        item.className = 'employee-checkbox-item';
-        item.dataset.employeeName = employeeName;
-        
-        const isChecked = selectedEmployees.includes(employeeName);
-        
-        item.innerHTML = `
-            <input type="checkbox" id="emp-${originalIndex}" ${isChecked ? 'checked' : ''}>
-            <div class="employee-checkbox-info">
-                <div class="employee-checkbox-initials ${colorClass}">${initials}</div>
-                <span>${employeeName}</span>
-            </div>
-        `;
-        
-        // Add click event to the entire item
-        item.addEventListener('click', (e) => {
-            if (e.target.type !== 'checkbox') {
-                const checkbox = item.querySelector('input[type="checkbox"]');
-                checkbox.checked = !checkbox.checked;
-            }
-        });
-        
-        employeeList.appendChild(item);
-    });
-}
-
-function filterEmployeeList() {
-    const searchTerm = document.getElementById('employeeSearch').value.toLowerCase();
-    const items = document.querySelectorAll('.employee-checkbox-item');
-    
-    items.forEach(item => {
-        const employeeName = item.dataset.employeeName.toLowerCase();
-        const matches = employeeName.includes(searchTerm);
-        item.style.display = matches ? 'flex' : 'none';
-    });
-}
-
-function selectAllEmployees() {
-    const visibleCheckboxes = document.querySelectorAll('.employee-checkbox-item:not([style*="display: none"]) input[type="checkbox"]');
-    visibleCheckboxes.forEach(checkbox => {
-        checkbox.checked = true;
-    });
-}
-
-function deselectAllEmployees() {
-    const visibleCheckboxes = document.querySelectorAll('.employee-checkbox-item:not([style*="display: none"]) input[type="checkbox"]');
-    visibleCheckboxes.forEach(checkbox => {
-        checkbox.checked = false;
-    });
-}
-
-function applyEmployeeFilter() {
-    const checkedBoxes = document.querySelectorAll('.employee-checkbox-item input[type="checkbox"]:checked');
-    selectedEmployees = Array.from(checkedBoxes).map(checkbox => {
-        return checkbox.closest('.employee-checkbox-item').dataset.employeeName;
-    });
-    
-    isFilterActive = selectedEmployees.length > 0 || officeHoursOnly; // Consider office filter too
-    updateFilterButton();
-    closeFilterModal();
-    updateDisplay();
-}
-
-function clearEmployeeFilter() {
-    selectedEmployees = [];
-    isFilterActive = false;
-    officeHoursOnly = false; // Also clear office hours filter
-    updateFilterButton();
-    updateDisplay();
-}
-
-function updateFilterButton() {
-    const filterBtn = document.getElementById('filterBtn');
-    if (isFilterActive || officeHoursOnly) {
-        filterBtn.innerHTML = '<i class="fas fa-times"></i> Clear Filter';
-        filterBtn.className = 'filter-btn clear-mode';
-    } else {
-        filterBtn.innerHTML = 'Filter Employees';
-        filterBtn.className = 'filter-btn';
-    }
-}
-
-function updateFilterResults(displayedCount, totalCount) {
-    const filterResultsText = document.getElementById('filterResultsText');
-    if (isFilterActive || officeHoursOnly) {
-        let filterDesc = '';
-        if (selectedEmployees.length > 0 && officeHoursOnly) {
-            filterDesc = ' (selected employees + office hours only)';
-        } else if (selectedEmployees.length > 0) {
-            filterDesc = ' (selected employees)';
-        } else if (officeHoursOnly) {
-            filterDesc = ' (office hours only)';
-        }
-        filterResultsText.textContent = `Showing ${displayedCount} of ${totalCount} employees${filterDesc}`;
-    } else {
-        filterResultsText.textContent = `Showing all ${displayedCount} employees`;
-    }
-}
-
-function jumpToToday() {
-    setCurrentWeek();
-    updateDisplay();
 }
 
 function hasScheduleData(weekData) {
@@ -639,6 +545,145 @@ function renderModalWeek(gridId, weekData) {
 
 function closeModal() {
     document.getElementById('employeeModal').style.display = 'none';
+}
+
+// Filter functionality
+function handleFilterBtn() {
+    if (isFilterActive || officeHoursOnly) {
+        clearEmployeeFilter();
+    } else {
+        openEmployeeFilterModal();
+    }
+}
+
+function openEmployeeFilterModal() {
+    const modal = document.getElementById('employeeFilterModal');
+    populateEmployeeFilterList();
+    updateOfficeHoursFilterButton();
+    modal.style.display = 'flex';
+}
+
+function closeFilterModal() {
+    document.getElementById('employeeFilterModal').style.display = 'none';
+}
+
+function populateEmployeeFilterList() {
+    const employeeList = document.getElementById('employeeFilterList');
+    let employees = Object.keys(employeeData);
+    employees = sortEmployees(employees);
+    
+    const colors = ['color-1', 'color-2', 'color-3', 'color-4', 'color-5', 'color-6', 
+                   'color-7', 'color-8', 'color-9', 'color-10', 'color-11', 'color-12'];
+    
+    employeeList.innerHTML = '';
+    
+    employees.forEach((employeeName) => {
+        const originalIndex = Object.keys(employeeData).sort().indexOf(employeeName);
+        const colorClass = colors[originalIndex % colors.length];
+        const initials = getInitials(employeeName);
+        
+        const item = document.createElement('div');
+        item.className = 'employee-checkbox-item';
+        item.dataset.employeeName = employeeName;
+        
+        const isChecked = selectedEmployees.includes(employeeName);
+        
+        item.innerHTML = `
+            <input type="checkbox" id="emp-${originalIndex}" ${isChecked ? 'checked' : ''}>
+            <div class="employee-checkbox-info">
+                <div class="employee-checkbox-initials ${colorClass}">${initials}</div>
+                <span>${employeeName}</span>
+            </div>
+        `;
+        
+        // Add click event to the entire item
+        item.addEventListener('click', (e) => {
+            if (e.target.type !== 'checkbox') {
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                checkbox.checked = !checkbox.checked;
+            }
+        });
+        
+        employeeList.appendChild(item);
+    });
+}
+
+function filterEmployeeList() {
+    const searchTerm = document.getElementById('employeeSearch').value.toLowerCase();
+    const items = document.querySelectorAll('.employee-checkbox-item');
+    
+    items.forEach(item => {
+        const employeeName = item.dataset.employeeName.toLowerCase();
+        const matches = employeeName.includes(searchTerm);
+        item.style.display = matches ? 'flex' : 'none';
+    });
+}
+
+function selectAllEmployees() {
+    const visibleCheckboxes = document.querySelectorAll('.employee-checkbox-item:not([style*="display: none"]) input[type="checkbox"]');
+    visibleCheckboxes.forEach(checkbox => {
+        checkbox.checked = true;
+    });
+}
+
+function deselectAllEmployees() {
+    const visibleCheckboxes = document.querySelectorAll('.employee-checkbox-item:not([style*="display: none"]) input[type="checkbox"]');
+    visibleCheckboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+}
+
+function applyEmployeeFilter() {
+    const checkedBoxes = document.querySelectorAll('.employee-checkbox-item input[type="checkbox"]:checked');
+    selectedEmployees = Array.from(checkedBoxes).map(checkbox => {
+        return checkbox.closest('.employee-checkbox-item').dataset.employeeName;
+    });
+    
+    isFilterActive = selectedEmployees.length > 0 || officeHoursOnly;
+    updateFilterButton();
+    closeFilterModal();
+    updateDisplay();
+}
+
+function clearEmployeeFilter() {
+    selectedEmployees = [];
+    isFilterActive = false;
+    officeHoursOnly = false;
+    updateFilterButton();
+    updateDisplay();
+}
+
+function updateFilterButton() {
+    const filterBtn = document.getElementById('filterBtn');
+    if (isFilterActive || officeHoursOnly) {
+        filterBtn.innerHTML = '<i class="fas fa-times"></i> Clear Filter';
+        filterBtn.className = 'filter-btn clear-mode';
+    } else {
+        filterBtn.innerHTML = 'Filter Employees';
+        filterBtn.className = 'filter-btn';
+    }
+}
+
+function updateFilterResults(displayedCount, totalCount) {
+    const filterResultsText = document.getElementById('filterResultsText');
+    if (isFilterActive || officeHoursOnly) {
+        let filterDesc = '';
+        if (selectedEmployees.length > 0 && officeHoursOnly) {
+            filterDesc = ' (selected employees + office hours only)';
+        } else if (selectedEmployees.length > 0) {
+            filterDesc = ' (selected employees)';
+        } else if (officeHoursOnly) {
+            filterDesc = ' (office hours only)';
+        }
+        filterResultsText.textContent = `Showing ${displayedCount} of ${totalCount} employees${filterDesc}`;
+    } else {
+        filterResultsText.textContent = `Showing all ${displayedCount} employees`;
+    }
+}
+
+function jumpToToday() {
+    setCurrentWeek();
+    updateDisplay();
 }
 
 function showLoading(show) {
