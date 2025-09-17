@@ -191,10 +191,7 @@ body {
     color: #d32f2f;
 }
 
-/* Schedule Body */
-.schedule-body {
-    padding: 0 20px 10px 20px;
-}
+
 
 /* Schedule Grid - Single Unified Grid */
 .schedule-grid {
@@ -203,6 +200,7 @@ body {
     gap: 0;
     font-size: 12px;
     border-left: 1px solid #e0e0e0;
+    min-width: 700px;
 }
 
 /* Grid Cells - Headers and Data */
