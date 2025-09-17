@@ -11,15 +11,75 @@ body {
 }
 
 .container {
-    max-width: 1400px;
+    max-width: 960px;
     margin: 0 auto;
     min-height: 100vh;
+}
+
+/* Main Header */
+.main-header {
+    background: white;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 20px;
+}
+
+.main-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.collapse-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    color: #666;
+    transition: all 0.2s;
+    font-size: 16px;
+}
+
+.collapse-btn:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.collapse-btn i {
+    transition: transform 0.3s ease;
+}
+
+.collapse-btn.collapsed i {
+    transform: rotate(-90deg);
+}
+
+/* Schedule Content Container */
+.schedule-content {
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    max-height: 5000px;
+    opacity: 1;
+    overflow: hidden;
+}
+
+.schedule-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
 }
 
 /* Header */
 .header {
     background: white;
-    border-bottom: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px;
     padding: 20px;
     display: flex;
     justify-content: space-between;
@@ -210,8 +270,9 @@ body {
     content: 'Today';
     font-size: 10px;
     display: block;
-    margin-top: 2px;
+    margin-top: 4px;
     font-weight: normal;
+    line-height: 1;
 }
 
 /* Employee Info Cells */

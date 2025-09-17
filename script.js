@@ -27,6 +27,9 @@ function initializeEventListeners() {
     // Filter button
     document.getElementById('filterBtn').addEventListener('click', handleFilterBtn);
     
+    // Collapse/Expand button
+    document.getElementById('collapseBtn').addEventListener('click', toggleScheduleCollapse);
+    
     // Modal events
     document.getElementById('closeModal').addEventListener('click', closeModal);
     document.getElementById('employeeModal').addEventListener('click', (e) => {
@@ -685,6 +688,22 @@ function updateFilterResults(displayedCount, totalCount) {
 function jumpToToday() {
     setCurrentWeek();
     updateDisplay();
+}
+
+function toggleScheduleCollapse() {
+    const scheduleContent = document.getElementById('scheduleContent');
+    const collapseBtn = document.getElementById('collapseBtn');
+    const collapseIcon = document.getElementById('collapseIcon');
+    
+    if (scheduleContent.classList.contains('collapsed')) {
+        scheduleContent.classList.remove('collapsed');
+        collapseBtn.classList.remove('collapsed');
+        collapseIcon.className = 'fas fa-chevron-down';
+    } else {
+        scheduleContent.classList.add('collapsed');
+        collapseBtn.classList.add('collapsed');
+        collapseIcon.className = 'fas fa-chevron-right';
+    }
 }
 
 function showLoading(show) {
