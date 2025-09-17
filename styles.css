@@ -193,14 +193,22 @@ body {
 
 
 
-/* Schedule Grid - Single Unified Grid */
+/* Schedule Body */
+.schedule-body {
+    padding: 0 0 20px 0;
+    margin: 0 20px;
+    overflow-x: auto;
+    overflow-y: visible;
+}
+
+/* Schedule Grid Container */
 .schedule-grid {
     display: grid;
     grid-template-columns: 140px repeat(5, 1fr);
     gap: 0;
     font-size: 12px;
-    min-width: 680px;
-    width: 100%;
+    min-width: 740px;
+    width: max-content;
 }
 
 /* Grid Cells - Headers and Data */
