@@ -1,4 +1,24 @@
-// Global variables
+function getCurrentDayOfWeek() {
+    const today = new Date();
+    const dayIndex = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    
+    // Convert to our format (Monday = 0, Tuesday = 1, etc.)
+    // Return -1 if today is weekend (not shown in schedule)
+    if (dayIndex === 0 || dayIndex === 6) return -1; // Sunday or Saturday
+    return dayIndex - 1; // Monday = 0, Tuesday = 1, etc.
+}
+
+function isCurrentWeek() {
+    const today = new Date();
+    const todayStart = new Date(today);
+    todayStart.setHours(0, 0, 0, 0);
+    
+    const currentWeekEnd = new Date(currentWeekStart);
+    currentWeekEnd.setDate(currentWeekEnd.getDate() + 6);
+    currentWeekEnd.setHours(23, 59, 59, 999);
+    
+    return todayStart >= currentWeekStart && todayStart <= currentWeekEnd;
+}// Global variables
 let employeeData = {};
 let currentWeekStart = null;
 let currentWeekType = 1; // 1 or 2
@@ -16,6 +36,9 @@ function initializeEventListeners() {
     // Navigation buttons
     document.getElementById('prevWeek').addEventListener('click', () => navigateWeek(-1));
     document.getElementById('nextWeek').addEventListener('click', () => navigateWeek(1));
+    
+    // Jump to Today button
+    document.getElementById('jumpTodayBtn').addEventListener('click', jumpToToday);
     
     // Week selector
     document.getElementById('weekSelector').addEventListener('change', (e) => {
@@ -219,11 +242,22 @@ function renderScheduleGrid() {
     // Set grid rows: 1 header row + number of employees with data
     scheduleGrid.style.gridTemplateRows = `auto repeat(${employeesWithData.length}, auto)`;
     
+    // Get current day info
+    const currentDayIndex = getCurrentDayOfWeek();
+    const isThisWeek = isCurrentWeek();
+    
     // Create header cells
     const headers = ['Employee', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     headers.forEach((header, index) => {
         const headerCell = document.createElement('div');
-        headerCell.className = `grid-cell header-cell ${index === 0 ? 'employee-header' : ''}`;
+        let className = `grid-cell header-cell ${index === 0 ? 'employee-header' : ''}`;
+        
+        // Highlight current day if this is the current week
+        if (isThisWeek && index > 0 && index - 1 === currentDayIndex) {
+            className += ' current-day';
+        }
+        
+        headerCell.className = className;
         headerCell.textContent = header;
         scheduleGrid.appendChild(headerCell);
     });
@@ -233,6 +267,9 @@ function renderScheduleGrid() {
         const employee = employeeData[employeeName];
         const weekData = currentWeekType === 1 ? employee.week1 : employee.week2;
         const colorClass = colors[employeeIndex % colors.length];
+        
+        // Store row cells for hover effect
+        const rowCells = [];
         
         // Employee info cell
         const employeeCell = document.createElement('div');
@@ -246,12 +283,20 @@ function renderScheduleGrid() {
         `;
         
         scheduleGrid.appendChild(employeeCell);
+        rowCells.push(employeeCell);
         
         // Day cells
         const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-        days.forEach(day => {
+        days.forEach((day, dayIndex) => {
             const dayCell = document.createElement('div');
-            dayCell.className = 'grid-cell day-cell';
+            let className = 'grid-cell day-cell';
+            
+            // Highlight current day if this is the current week
+            if (isThisWeek && dayIndex === currentDayIndex) {
+                className += ' current-day';
+            }
+            
+            dayCell.className = className;
             
             const daySchedule = weekData[day] || [];
             daySchedule.forEach(block => {
@@ -268,29 +313,25 @@ function renderScheduleGrid() {
             });
             
             scheduleGrid.appendChild(dayCell);
+            rowCells.push(dayCell);
         });
         
         // Add hover effects to entire employee row
-        const rowStartIndex = (employeeIndex + 1) * 6; // +1 for header row
-        for (let i = 0; i < 6; i++) {
-            const cell = scheduleGrid.children[rowStartIndex + i];
-            if (cell && !cell.classList.contains('header-cell')) {
-                cell.addEventListener('mouseenter', () => {
-                    for (let j = 0; j < 6; j++) {
-                        const rowCell = scheduleGrid.children[rowStartIndex + j];
-                        if (rowCell) rowCell.classList.add('employee-row-hover');
-                    }
-                });
-                
-                cell.addEventListener('mouseleave', () => {
-                    for (let j = 0; j < 6; j++) {
-                        const rowCell = scheduleGrid.children[rowStartIndex + j];
-                        if (rowCell) rowCell.classList.remove('employee-row-hover');
-                    }
-                });
-            }
-        }
+        rowCells.forEach(cell => {
+            cell.addEventListener('mouseenter', () => {
+                rowCells.forEach(rowCell => rowCell.classList.add('employee-row-hover'));
+            });
+            
+            cell.addEventListener('mouseleave', () => {
+                rowCells.forEach(rowCell => rowCell.classList.remove('employee-row-hover'));
+            });
+        });
     });
+}
+
+function jumpToToday() {
+    setCurrentWeek();
+    updateDisplay();
 }
 
 function hasScheduleData(weekData) {

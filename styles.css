@@ -57,6 +57,26 @@ body {
     text-align: center;
 }
 
+.week-selector {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.jump-today-btn {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.jump-today-btn:hover {
+    background: #f0f0f0;
+}
+
 .week-selector select {
     padding: 8px 12px;
     border: 1px solid #ddd;
@@ -125,6 +145,20 @@ body {
 .header-cell.employee-header {
     text-align: left;
     background: #fff;
+}
+
+.header-cell.current-day {
+    background: #e3f2fd;
+    color: #1976d2;
+    position: relative;
+}
+
+.header-cell.current-day::after {
+    content: '• Today';
+    font-size: 10px;
+    display: block;
+    margin-top: 2px;
+    font-weight: normal;
 }
 
 /* Employee Info Cells */
