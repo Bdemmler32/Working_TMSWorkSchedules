@@ -199,7 +199,6 @@ body {
     grid-template-columns: 140px repeat(5, 1fr);
     gap: 0;
     font-size: 12px;
-    border-left: 1px solid #e0e0e0;
     min-width: 680px;
     width: 100%;
 }
@@ -210,6 +209,21 @@ body {
     border-right: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
     box-sizing: border-box;
+}
+
+/* Remove left border from Employee column */
+.grid-cell:nth-child(6n+1) {
+    border-left: none;
+}
+
+/* Remove right border from Friday column */
+.grid-cell:nth-child(6n) {
+    border-right: none;
+}
+
+/* Remove bottom border from last row of employees */
+.schedule-grid .grid-cell:nth-last-child(-n+6) {
+    border-bottom: none;
 }
 
 /* Header Cells */
