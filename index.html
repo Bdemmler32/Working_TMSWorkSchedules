@@ -14,16 +14,15 @@
         <div class="header">
             <div class="date-navigation">
                 <button class="nav-btn" id="prevWeek">&lt;</button>
-                <span class="date-range" id="dateRange">Loading...</span>
+                <div class="date-range-container">
+                    <span class="date-range" id="dateRange">Loading...</span>
+                </div>
                 <button class="nav-btn" id="nextWeek">&gt;</button>
             </div>
             <div class="week-selector">
                 <button class="jump-today-btn" id="jumpTodayBtn">Jump to Today</button>
                 <button class="filter-btn" id="filterBtn">Filter Employees</button>
-                <select id="weekSelector">
-                    <option value="1">Week 1</option>
-                    <option value="2">Week 2</option>
-                </select>
+                <span class="week-display" id="weekDisplay">Week 1</span>
             </div>
         </div>
 

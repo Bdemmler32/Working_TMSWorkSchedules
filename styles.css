@@ -32,6 +32,12 @@ body {
     gap: 15px;
 }
 
+.date-range-container {
+    min-width: 320px;
+    display: flex;
+    justify-content: center;
+}
+
 .nav-btn {
     background: #f0f0f0;
     border: 1px solid #ddd;
@@ -53,7 +59,6 @@ body {
 .date-range {
     font-size: 18px;
     font-weight: 500;
-    min-width: 280px;
     text-align: center;
 }
 
@@ -90,13 +95,14 @@ body {
     background: #ffebee;
 }
 
-.week-selector select {
-    padding: 8px 12px;
+.week-display {
+    padding: 8px 16px;
+    background: #f8f9fa;
     border: 1px solid #ddd;
     border-radius: 6px;
     font-size: 14px;
-    background: white;
-    cursor: pointer;
+    font-weight: 500;
+    color: #333;
 }
 
 /* Loading and Error States */
@@ -154,6 +160,10 @@ body {
     top: 0;
     z-index: 10;
     position: relative;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .header-cell.employee-header {
@@ -194,11 +204,10 @@ body {
 .header-cell.current-day {
     background: #e3f2fd;
     color: #1976d2;
-    position: relative;
 }
 
 .header-cell.current-day::after {
-    content: '• Today';
+    content: 'Today';
     font-size: 10px;
     display: block;
     margin-top: 2px;
@@ -238,15 +247,15 @@ body {
     /* Default white background for odd employee rows */
 }
 
-/* Even employee rows (every other set of 6 cells) */
-.schedule-grid > .grid-cell:nth-child(12n+7),
+/* Even employee rows (every other set of 6 cells) - REMOVED ALTERNATING BACKGROUNDS */
+/* .schedule-grid > .grid-cell:nth-child(12n+7),
 .schedule-grid > .grid-cell:nth-child(12n+8),
 .schedule-grid > .grid-cell:nth-child(12n+9),
 .schedule-grid > .grid-cell:nth-child(12n+10),
 .schedule-grid > .grid-cell:nth-child(12n+11),
 .schedule-grid > .grid-cell:nth-child(12n+12) {
     background: #fafafa;
-}
+} */
 
 /* Hover effect for employee rows */
 .employee-row-hover .grid-cell {

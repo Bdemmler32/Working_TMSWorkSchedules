@@ -27,23 +27,14 @@ function initializeEventListeners() {
     // Filter button
     document.getElementById('filterBtn').addEventListener('click', handleFilterBtn);
     
-    // Week selector
-    document.getElementById('weekSelector').addEventListener('change', (e) => {
-        currentWeekType = parseInt(e.target.value);
-        updateDisplay();
-    });
-    
     // Modal events
     document.getElementById('closeModal').addEventListener('click', closeModal);
     document.getElementById('employeeModal').addEventListener('click', (e) => {
         if (e.target.id === 'employeeModal') closeModal();
     });
     
-    // Filter modal events
+    // Filter modal events - REMOVED CLICK OUTSIDE TO CLOSE
     document.getElementById('closeFilterModal').addEventListener('click', closeFilterModal);
-    document.getElementById('employeeFilterModal').addEventListener('click', (e) => {
-        if (e.target.id === 'employeeFilterModal') closeFilterModal();
-    });
     
     // Filter actions
     document.getElementById('selectAllBtn').addEventListener('click', selectAllEmployees);
@@ -193,8 +184,8 @@ function setCurrentWeek() {
     currentWeekStart = new Date(WEEK_1_START);
     currentWeekStart.setDate(currentWeekStart.getDate() + (weeksFromStart * 7));
     
-    // Update week selector
-    document.getElementById('weekSelector').value = currentWeekType.toString();
+    // Update week display
+    updateWeekDisplay();
 }
 
 function navigateWeek(direction) {
@@ -205,13 +196,23 @@ function navigateWeek(direction) {
     const weekNumber = Math.floor(daysSinceStart / 7);
     currentWeekType = (weekNumber % 2) + 1;
     
-    document.getElementById('weekSelector').value = currentWeekType.toString();
+    updateWeekDisplay();
     updateDisplay();
 }
 
 function updateDisplay() {
     updateDateRange();
+    updateWeekDisplay();
     renderScheduleGrid();
+}
+
+function updateWeekDisplay() {
+    const weekDisplay = document.getElementById('weekDisplay');
+    if (currentWeekType === 1) {
+        weekDisplay.textContent = 'Week 1 - Pay Week';
+    } else {
+        weekDisplay.textContent = 'Week 2';
+    }
 }
 
 function updateDateRange() {
