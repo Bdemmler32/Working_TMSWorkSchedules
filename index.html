@@ -10,17 +10,23 @@
 </head>
 <body>
     <div class="container">
-        <!-- Collapsible Schedule Content -->
-        <div class="schedule-content" id="scheduleContent">
-            <!-- Header with Title and Controls -->
-            <div class="header">
-                <div class="header-title-section">
-                    <h1>TMS Staff Work Schedules</h1>
-                    <button class="collapse-btn" id="collapseBtn">
-                        <i class="fas fa-chevron-right" id="collapseIcon"></i>
-                    </button>
-                </div>
-                <div class="header-controls" id="headerControls" style="display: none;">
+        <!-- Single Unified Container -->
+        <div class="unified-container" id="unifiedContainer">
+            <!-- Header Section -->
+            <div class="header-section">
+                <h1>TMS Staff Work Schedules</h1>
+                <button class="collapse-btn" id="collapseBtn">
+                    <i class="fas fa-chevron-down" id="collapseIcon"></i>
+                </button>
+            </div>
+
+            <!-- Expandable Content -->
+            <div class="expandable-content" id="expandableContent">
+                <!-- Rule Separator -->
+                <div class="section-separator"></div>
+                
+                <!-- Date Navigation Section -->
+                <div class="date-section">
                     <div class="date-navigation">
                         <button class="nav-btn" id="prevWeek">&lt;</button>
                         <div class="date-range-container">
@@ -34,28 +40,34 @@
                         <span class="week-display" id="weekDisplay">Week 1</span>
                     </div>
                 </div>
-            </div>
 
-        <!-- Loading State -->
-        <div class="loading" id="loading">
-            <div class="loading-text">Loading schedule data...</div>
-        </div>
+                <!-- Rule Separator -->
+                <div class="section-separator"></div>
 
-        <!-- Error State -->
-        <div class="error" id="error" style="display: none;">
-            <div class="error-text">Error loading schedule data. Please check that TMS-WorkSchedules.xlsx is in the same directory.</div>
-        </div>
+                <!-- Loading State -->
+                <div class="loading" id="loading">
+                    <div class="loading-text">Loading schedule data...</div>
+                </div>
 
-        <!-- Schedule Grid -->
-        <div class="schedule-body" id="scheduleBody" style="display: none;">
-            <div class="schedule-grid" id="scheduleGrid">
-                <!-- Headers and employee rows will be populated by JavaScript as one unified grid -->
-            </div>
-        </div>
+                <!-- Error State -->
+                <div class="error" id="error" style="display: none;">
+                    <div class="error-text">Error loading schedule data. Please check that TMS-WorkSchedules.xlsx is in the same directory.</div>
+                </div>
 
-            <!-- Filter Results Indicator -->
-            <div class="filter-results" id="filterResults">
-                <span id="filterResultsText">Loading...</span>
+                <!-- Schedule Grid -->
+                <div class="schedule-body" id="scheduleBody" style="display: none;">
+                    <div class="schedule-grid" id="scheduleGrid">
+                        <!-- Headers and employee rows will be populated by JavaScript as one unified grid -->
+                    </div>
+                </div>
+
+                <!-- Rule Separator -->
+                <div class="section-separator" id="bottomSeparator" style="display: none;"></div>
+
+                <!-- Filter Results Indicator -->
+                <div class="filter-results" id="filterResults" style="display: none;">
+                    <span id="filterResultsText">Loading...</span>
+                </div>
             </div>
         </div>
     </div>
