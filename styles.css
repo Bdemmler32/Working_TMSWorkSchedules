@@ -622,19 +622,20 @@ body {
 
 .office-hours-filter-btn {
     padding: 8px 16px;
-    border: 1px solid #ddd;
+    border: 1px solid #d69e2e;
     border-radius: 6px;
     cursor: pointer;
     font-size: 12px;
     transition: background-color 0.2s;
-    background: white;
+    background: #ffeaa7;
+    color: #2d3436;
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
 .office-hours-filter-btn:hover {
-    background: #f0f0f0;
+    background: #ffdd70;
 }
 
 .office-hours-filter-btn.active {
