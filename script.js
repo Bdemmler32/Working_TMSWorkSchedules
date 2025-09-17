@@ -517,8 +517,11 @@ function openEmployeeModal(employeeName) {
     document.getElementById('modalEmployeeName').textContent = `${employeeName} - Schedule`;
     
     // Update week titles
-    document.getElementById('currentWeekTitle').textContent = `Week ${currentWeekType} (Current)`;
-    document.getElementById('otherWeekTitle').textContent = `Week ${currentWeekType === 1 ? 2 : 1}`;
+    const currentWeekTitle = currentWeekType === 1 ? 'Week 1 - Pay Week (Current)' : 'Week 2 (Current)';
+    const otherWeekTitle = currentWeekType === 1 ? 'Week 2' : 'Week 1 - Pay Week';
+    
+    document.getElementById('currentWeekTitle').textContent = currentWeekTitle;
+    document.getElementById('otherWeekTitle').textContent = otherWeekTitle;
     
     // Render current week
     const currentWeekData = currentWeekType === 1 ? employee.week1 : employee.week2;
@@ -711,7 +714,7 @@ function updateFilterButton() {
             filterBtn.innerHTML = '<i class="fas fa-times"></i> Clear Filter';
             filterBtn.className = 'filter-btn clear-mode';
         } else {
-            filterBtn.innerHTML = 'Filter Employees';
+            filterBtn.innerHTML = 'Filter Options';
             filterBtn.className = 'filter-btn';
         }
     }
