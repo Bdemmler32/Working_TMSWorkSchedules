@@ -14,9 +14,13 @@ const WEEK_1_START = new Date('2025-09-13T00:00:00');
 document.addEventListener('DOMContentLoaded', function() {
     initializeEventListeners();
     loadScheduleData();
-    // Start collapsed by default
-    document.getElementById('unifiedContainer').classList.add('collapsed');
-    document.getElementById('expandableContent').classList.add('collapsed');
+    
+    // Start collapsed by default - add null checks
+    const unifiedContainer = document.getElementById('unifiedContainer');
+    const expandableContent = document.getElementById('expandableContent');
+    
+    if (unifiedContainer) unifiedContainer.classList.add('collapsed');
+    if (expandableContent) expandableContent.classList.add('collapsed');
 });
 
 function initializeEventListeners() {
@@ -708,6 +712,12 @@ function toggleScheduleCollapse() {
     const expandableContent = document.getElementById('expandableContent');
     const collapseIcon = document.getElementById('collapseIcon');
     
+    // Check if elements exist before trying to access them
+    if (!expandableContent || !collapseIcon || !unifiedContainer) {
+        console.error('Required elements not found for collapse toggle');
+        return;
+    }
+    
     if (expandableContent.classList.contains('collapsed')) {
         // Expand
         expandableContent.classList.remove('collapsed');
@@ -722,16 +732,27 @@ function toggleScheduleCollapse() {
 }
 
 function showLoading(show) {
-    document.getElementById('loading').style.display = show ? 'flex' : 'none';
-    document.getElementById('scheduleBody').style.display = show ? 'none' : 'block';
-    document.getElementById('filterResults').style.display = show ? 'none' : 'block';
-    document.getElementById('bottomSeparator').style.display = show ? 'none' : 'block';
+    const loading = document.getElementById('loading');
+    const scheduleBody = document.getElementById('scheduleBody');
+    const filterResults = document.getElementById('filterResults');
+    const bottomSeparator = document.getElementById('bottomSeparator');
+    
+    if (loading) loading.style.display = show ? 'flex' : 'none';
+    if (scheduleBody) scheduleBody.style.display = show ? 'none' : 'block';
+    if (filterResults) filterResults.style.display = show ? 'none' : 'block';
+    if (bottomSeparator) bottomSeparator.style.display = show ? 'none' : 'block';
 }
 
 function showError() {
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('error').style.display = 'flex';
-    document.getElementById('scheduleBody').style.display = 'none';
-    document.getElementById('filterResults').style.display = 'none';
-    document.getElementById('bottomSeparator').style.display = 'none';
+    const loading = document.getElementById('loading');
+    const error = document.getElementById('error');
+    const scheduleBody = document.getElementById('scheduleBody');
+    const filterResults = document.getElementById('filterResults');
+    const bottomSeparator = document.getElementById('bottomSeparator');
+    
+    if (loading) loading.style.display = 'none';
+    if (error) error.style.display = 'flex';
+    if (scheduleBody) scheduleBody.style.display = 'none';
+    if (filterResults) filterResults.style.display = 'none';
+    if (bottomSeparator) bottomSeparator.style.display = 'none';
 }
