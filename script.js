@@ -50,7 +50,7 @@ function initializeEventListeners() {
     document.getElementById('selectAllBtn').addEventListener('click', selectAllEmployees);
     document.getElementById('deselectAllBtn').addEventListener('click', deselectAllEmployees);
     document.getElementById('applyFilterBtn').addEventListener('click', applyEmployeeFilter);
-    document.getElementById('officeHoursFilterBtn').addEventListener('click', toggleOfficeHoursFilter);
+    document.getElementById('officeHoursCheckbox').addEventListener('change', toggleOfficeHoursFilter);
     
     // Employee search
     document.getElementById('employeeSearch').addEventListener('input', filterEmployeeList);
@@ -260,21 +260,8 @@ function toggleNameSort() {
 }
 
 function toggleOfficeHoursFilter() {
-    officeHoursOnly = !officeHoursOnly;
-    updateOfficeHoursFilterButton();
-}
-
-function updateOfficeHoursFilterButton() {
-    const btn = document.getElementById('officeHoursFilterBtn');
-    if (btn) {
-        if (officeHoursOnly) {
-            btn.classList.add('active');
-            btn.innerHTML = '<i class="fas fa-building"></i> Clear Office Filter';
-        } else {
-            btn.classList.remove('active');
-            btn.innerHTML = '<i class="fas fa-building"></i> Filter Office Hours';
-        }
-    }
+    const checkbox = document.getElementById('officeHoursCheckbox');
+    officeHoursOnly = checkbox.checked;
 }
 
 function hasOfficeHours(employee, weekData) {
@@ -595,7 +582,7 @@ function handleFilterBtn() {
 function openEmployeeFilterModal() {
     const modal = document.getElementById('employeeFilterModal');
     populateEmployeeFilterList();
-    updateOfficeHoursFilterButton();
+    updateOfficeHoursCheckbox();
     
     // Clear search bar when opening modal
     const searchInput = document.getElementById('employeeSearch');
@@ -608,6 +595,13 @@ function openEmployeeFilterModal() {
 
 function closeFilterModal() {
     document.getElementById('employeeFilterModal').style.display = 'none';
+}
+
+function updateOfficeHoursCheckbox() {
+    const checkbox = document.getElementById('officeHoursCheckbox');
+    if (checkbox) {
+        checkbox.checked = officeHoursOnly;
+    }
 }
 
 function populateEmployeeFilterList() {
